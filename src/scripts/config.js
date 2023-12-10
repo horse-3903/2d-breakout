@@ -1,13 +1,16 @@
 const Settings = {
     StartBallSpeed : 5,
-    AccelerationCoefficient : 0.3,
-    FrictionCoefficient : 0.5,
-    PlayerSpeed : 10,
+    MinBallSpeed : 0.75,
+    MaxBallSpeed : 10,
+    AccelerationCoefficient : 1.3,
+    FrictionCoefficient : 0.7,
+    PlayerSpeed : 12,
 }
 
 const Game = {
+    Player : null,
+    Ball : null,
     Sprites : [],
-    GUI : [],
     Score : 0,
     isPlaying : false,
 }
