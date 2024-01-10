@@ -8,5 +8,4 @@ canvas {
     position: absolute;
     display: block;
     margin: 0 auto;
-    image-rendering: pixelated;
 }
