@@ -1,11 +1,15 @@
 * {
+    background: #000;
+    color: white;
     padding: 0;
     margin: 0;
 }
 
+/* div {
+
+} */
+
 canvas {
-    background: #000;
     position: absolute;
-    display: block;
     margin: 0 auto;
 }

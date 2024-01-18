@@ -26,6 +26,7 @@ class PlayerSprite extends Sprite{
     constructor(Colour, X, Y, Width, Height){
         super(Colour, X, Y, Width, Height)
         this.Moving = false
+        this.Computer = false
     }
 
     Update(){
@@ -38,8 +39,11 @@ class PlayerSprite extends Sprite{
         
         if (Keyboard.Left || Keyboard.Right) 
             this.Moving = true
-        else
-            this.Moving = false
+
+        if (this.Computer){
+            this.Center(Game.Ball.Position.X, this.Position.Y + ~~(this.Height / 2))
+            this.Moving = true
+        }
 
         if (this.Position.X < 0){
             this.Position.X = 0
@@ -66,22 +70,18 @@ class BallSprite extends Sprite{
         this.Colour = this.SavedColour
 
         this.Velocity = Pair(
-            RandVal(-Settings.StartBallSpeed, Settings.StartBallSpeed, (i) => Math.abs(i) > 1), 
-            RandVal(1.25, Settings.StartBallSpeed),
+            // RandVal(-Settings.StartBallSpeed, Settings.StartBallSpeed, (i) => Math.abs(i) > 1.25), 
+            // RandVal(1.5, Settings.StartBallSpeed),
+            60, 25
+            // 0, 10
         )
     }
 
     Blink(){
-        // 0 - 10, 26 - 35, > 50 (saved colour)
-        // 11 - 15, 36 - 40 (black)
-        // 16 - 25, 41 - 50 (white)
-
-        if ((0 <= Game.Frame && Game.Frame <= 10) || (26 <= Game.Frame && Game.Frame <= 35))
-            this.Colour = this.SavedColour
-        else if ((11 <= Game.Frame && Game.Frame <= 15) || (36 <= Game.Frame && Game.Frame <= 40))
-            this.Colour = "black"
-        else if ((16 <= Game.Frame && Game.Frame <= 25) || (41 <= Game.Frame && Game.Frame < 50))
+        if ((0 <= Game.Frame && Game.Frame <= 10) || (21 <= Game.Frame && Game.Frame <= 30) || (41 <= Game.Frame && Game.Frame <= 50))
             this.Colour = "white"
+        else if ((11 <= Game.Frame && Game.Frame <= 20) || (31 <= Game.Frame && Game.Frame <= 40) || (Game.Frame > 50))
+            this.Colour = this.SavedColour
     }
 
     Center(X, Y){
@@ -139,9 +139,12 @@ class BallSprite extends Sprite{
         if (this.Position.Y + this.Radius >= Canvas.height) {
             console.log("YOU LOSE")
             
-            // endgame phase
             SetScreen()
-        }
+        } else if (!Game.ActiveSprites) {
+            console.log("YOU WIN")
+
+            SetScreen()
+        }        
 
         this.Position.X += ~~(this.Velocity.X)
         this.Position.Y += ~~(this.Velocity.Y)
@@ -149,9 +152,11 @@ class BallSprite extends Sprite{
 }
 
 class RectSprite extends Sprite{
-    constructor(Colour, X, Y, Width, Height){
+    constructor(Colour, X, Y, Width, Height, id){
         super(Colour, X, Y, Width, Height)
         this.Active = true
+        this.Destroy = false
+        this.id = id
     }
 
     Update(){
@@ -159,25 +164,35 @@ class RectSprite extends Sprite{
             super.Update()
         
             if (
-                (Game.Ball.Position.X + Game.Ball.Radius >= this.Position.X) && 
-                (Game.Ball.Position.X - Game.Ball.Radius <= this.Position.X + this.Width) &&
-                (Game.Ball.Position.Y + Game.Ball.Radius >= this.Position.Y) &&
-                (Game.Ball.Position.Y - Game.Ball.Radius <= this.Position.Y + this.Height)
+                (Game.Ball.Position.X + Game.Ball.Radius >= this.Position.X - Settings.RectMargin / 2) && 
+                (Game.Ball.Position.X - Game.Ball.Radius <= this.Position.X + this.Width + Settings.RectMargin / 2) &&
+                (Game.Ball.Position.Y + Game.Ball.Radius >= this.Position.Y - Settings.RectMargin / 2) &&
+                (Game.Ball.Position.Y - Game.Ball.Radius <= this.Position.Y + this.Height + Settings.RectMargin / 2)
             ){
-                if (Math.min(Math.abs(Game.Ball.Position.Y - this.Position.Y), Math.abs(Game.Ball.Position.Y - this.Position.Y - this.Height)) < Math.min(Math.abs(Game.Ball.Position.X - this.Position.X), Math.abs(Game.Ball.Position.X - this.Position.X - this.Width))){
+                if (
+                    Math.min(
+                        Math.abs(Game.Ball.Position.Y - this.Position.Y), 
+                        Math.abs(Game.Ball.Position.Y - this.Position.Y - this.Height)
+                    ) < 
+                    Math.min(
+                        Math.abs(Game.Ball.Position.X - this.Position.X), 
+                        Math.abs(Game.Ball.Position.X - this.Position.X - this.Width)
+                    )
+                ){
                     if (Math.abs(Game.Ball.Position.Y - this.Position.Y) > Math.abs(Game.Ball.Position.Y - this.Position.Y - this.Height))
                         Game.Ball.Velocity = Pair(Game.Ball.Velocity.X, Math.abs(Game.Ball.Velocity.Y))
                     else
                         Game.Ball.Velocity = Pair(Game.Ball.Velocity.X, -Math.abs(Game.Ball.Velocity.Y))
                 } else {
                     if (Math.abs(Game.Ball.Position.X - this.Position.X) > Math.abs(Game.Ball.Position.X - this.Position.X - this.Width))
-                        Game.Ball.Velocity = Pair(Math.abs(Game.Ball.Velocity.X), Game.Ball.Velocity.Y)
+                        Game.Ball.Velocity = Pair(Math.abs(Game.Ball.Velocity.X), Game.Ball.Velocity.Y)                        
                     else
                         Game.Ball.Velocity = Pair(-Math.abs(Game.Ball.Velocity.X), Game.Ball.Velocity.Y)
                 }
 
-                this.Active = false
-                Game.Score += 1
+                this.Destroy = true
+                
+                UpdateScore(Game.Score + 1)
             }
         }
     }

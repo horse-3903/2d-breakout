@@ -20,6 +20,7 @@ const Game = {
     Player : null,
     Ball : null,
     Sprites : [],
+    ActiveSprites : 0,
     
     Score : 0,
     isPlaying : false,
