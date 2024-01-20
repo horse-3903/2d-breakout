@@ -54,13 +54,19 @@ function UpdateSprites(){
     Sprites.forEach((s) => s.Update())
 }
 
-function UpdateScore(score = 0){
+function UpdateScore(score = null){
+    if (score == null){
+        Game.Score += 1
+        score = Game.Score
+    }
+
     Game.Score = score
     // document.getElementById("score").innerText = "Score : " + Game.Score
 }
 
 function ToDestroy(){
-    let ToDestroy = Game.Sprites.filter((r) => r.Destroy)
+    let ToDestroy = Game.Sprites.filter((r) => r.Destroy && !r.Immune)
+    // console.log(ToDestroy.length)
     
     if (ToDestroy.length == 1){
         ToDestroy[0].Active = false
@@ -69,71 +75,77 @@ function ToDestroy(){
     } else if (ToDestroy.length > 1){
         let Index = ~~RandVal(0, ToDestroy.length)
         ToDestroy[Index].Active = false
-        ToDestroy[Index].Destroy = false
+        for (let i = 0; i < ToDestroy.length; i++){
+            if (i != Index)
+                ToDestroy[i].Immune = true
+        }
+        ToDestroy.forEach((v) => v.Destroy = false)
         Game.ActiveSprites -= 1
     } 
 }
 
 function SpawnRectField(){
-    const ColourPalette = ["#70ff00","#82ff04","#93ff00","#a5ff00","#b7ff00","#c8ff00","#d9ff00","#ebff00"]
-    const Layers = (Settings.RectRange[1].Y - Settings.RectRange[0].Y - Settings.RectMargin) / (Settings.RectHeight + Settings.RectMargin)
-    const ValidWidth = Settings.RectRange[1].X - Settings.RectRange[0].X
+    if (!Game.Test){
+        const ColourPalette = ["#70ff00","#82ff04","#93ff00","#a5ff00","#b7ff00","#c8ff00","#d9ff00","#ebff00"]
+        const Layers = (Settings.RectRange[1].Y - Settings.RectRange[0].Y - Settings.RectMargin) / (Settings.RectHeight + Settings.RectMargin)
+        const ValidWidth = Settings.RectRange[1].X - Settings.RectRange[0].X
 
-    let CurPosY = Settings.RectRange[0].Y + Settings.RectMargin
-    let CurID = 0
+        let CurPosY = Settings.RectRange[0].Y + Settings.RectMargin
+        let CurID = 0
 
-    for (let i = 0; i < Layers; i++){
-        let CurPosX = Settings.RectMargin
-        let LayerColour = ColourPalette[i]
+        for (let i = 0; i < Layers; i++){
+            let CurPosX = Settings.RectMargin
+            let LayerColour = ColourPalette[i]
 
-        while (ValidWidth - CurPosX > Settings.RectMargin * 3 + Settings.RectMinLength * 2){
-            let CurWidth = RandVal(
-                Settings.RectMinLength, 
-                Math.min(ValidWidth - CurPosX - Settings.RectMargin * 2 - Settings.RectMinLength, Settings.RectMinLength * 10)
-            )
+            while (ValidWidth - CurPosX > Settings.RectMargin * 3 + Settings.RectMinLength * 2){
+                let CurWidth = RandVal(
+                    Settings.RectMinLength, 
+                    Math.min(ValidWidth - CurPosX - Settings.RectMargin * 2 - Settings.RectMinLength, Settings.RectMinLength * 10)
+                )
+
+                Game.Sprites.push(
+                    new RectSprite(
+                        LayerColour,
+                        CurPosX, CurPosY,
+                        CurWidth, Settings.RectHeight
+                    )
+                )
+
+                CurPosX += CurWidth + Settings.RectMargin
+            }
 
             Game.Sprites.push(
                 new RectSprite(
                     LayerColour,
-                    CurPosX, CurPosY,
-                    CurWidth, Settings.RectHeight
+                    CurPosX, CurPosY, 
+                    ValidWidth - Settings.RectMargin - CurPosX, Settings.RectHeight,
+                    CurID
                 )
             )
 
-            CurPosX += CurWidth + Settings.RectMargin
+            CurPosY += Settings.RectHeight + Settings.RectMargin
+            CurID += 1
         }
-
+    } else {
+        // test blocks
         Game.Sprites.push(
             new RectSprite(
-                LayerColour,
-                CurPosX, CurPosY, 
-                ValidWidth - Settings.RectMargin - CurPosX, Settings.RectHeight,
-                CurID
+                "70ff00",
+                Settings.RectRange[1].X / 4, Settings.RectRange[0].Y, 
+                Settings.RectRange[1].X / 4 - Settings.RectMargin / 2, Settings.RectHeight * 10,
+                1
             )
         )
 
-        CurPosY += Settings.RectHeight + Settings.RectMargin
-        CurID += 1
+        Game.Sprites.push(
+            new RectSprite(
+                "70ff00",
+                Settings.RectRange[1].X / 2 + Settings.RectMargin / 2, Settings.RectRange[0].Y, 
+                Settings.RectRange[1].X / 4, Settings.RectHeight * 10,
+                2
+            )
+        )   
     }
-
-    // test blocks
-    // Game.Sprites.push(
-    //     new RectSprite(
-    //         "70ff00",
-    //         Settings.RectRange[1].X / 4, Settings.RectRange[0].Y, 
-    //         Settings.RectRange[1].X / 4 - Settings.RectMargin / 2, Settings.RectHeight,
-    //         1
-    //     )
-    // )
-
-    // Game.Sprites.push(
-    //     new RectSprite(
-    //         "70ff00",
-    //         Settings.RectRange[1].X / 2 + Settings.RectMargin / 2, Settings.RectRange[0].Y, 
-    //         Settings.RectRange[1].X / 4, Settings.RectHeight,
-    //         2
-    //     )
-    // )
 
     Game.ActiveSprites = Game.Sprites.length
 }

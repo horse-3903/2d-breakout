@@ -26,7 +26,6 @@ class PlayerSprite extends Sprite{
     constructor(Colour, X, Y, Width, Height){
         super(Colour, X, Y, Width, Height)
         this.Moving = false
-        this.Computer = false
     }
 
     Update(){
@@ -40,7 +39,7 @@ class PlayerSprite extends Sprite{
         if (Keyboard.Left || Keyboard.Right) 
             this.Moving = true
 
-        if (this.Computer){
+        if (Game.Computer){
             this.Center(Game.Ball.Position.X, this.Position.Y + ~~(this.Height / 2))
             this.Moving = true
         }
@@ -69,12 +68,15 @@ class BallSprite extends Sprite{
     SetVelocity(){
         this.Colour = this.SavedColour
 
-        this.Velocity = Pair(
-            // RandVal(-Settings.StartBallSpeed, Settings.StartBallSpeed, (i) => Math.abs(i) > 1.25), 
-            // RandVal(1.5, Settings.StartBallSpeed),
-            60, 25
-            // 0, 10
-        )
+        if (Game.Computer)
+            this.Velocity = Pair(60, 25)
+        else if (Game.Test)
+            this.Velocity = Pair(0, 3)
+        else
+            this.Velocity = Pair(
+                RandVal(-Settings.StartBallSpeed, Settings.StartBallSpeed, (i) => Math.abs(i) > 1.25), 
+                RandVal(1.5, Settings.StartBallSpeed),
+            )
     }
 
     Blink(){
@@ -137,10 +139,12 @@ class BallSprite extends Sprite{
         }
         
         if (this.Position.Y + this.Radius >= Canvas.height) {
+            // Lose Phase
             console.log("YOU LOSE")
             
             SetScreen()
         } else if (!Game.ActiveSprites) {
+            // Win Phase
             console.log("YOU WIN")
 
             SetScreen()
@@ -156,14 +160,25 @@ class RectSprite extends Sprite{
         super(Colour, X, Y, Width, Height)
         this.Active = true
         this.Destroy = false
+        this.Immune = false
+
+        this.SavedColour = Colour
         this.id = id
     }
 
     Update(){
         if (this.Active){
+            if (Game.Test){
+                if (this.Immune)
+                    this.Colour = "red"
+                else
+                    this.Colour = this.SavedColour
+            }
+
             super.Update()
         
             if (
+                !this.Immune &&
                 (Game.Ball.Position.X + Game.Ball.Radius >= this.Position.X - Settings.RectMargin / 2) && 
                 (Game.Ball.Position.X - Game.Ball.Radius <= this.Position.X + this.Width + Settings.RectMargin / 2) &&
                 (Game.Ball.Position.Y + Game.Ball.Radius >= this.Position.Y - Settings.RectMargin / 2) &&
@@ -189,10 +204,20 @@ class RectSprite extends Sprite{
                     else
                         Game.Ball.Velocity = Pair(-Math.abs(Game.Ball.Velocity.X), Game.Ball.Velocity.Y)
                 }
-
-                this.Destroy = true
                 
-                UpdateScore(Game.Score + 1)
+                this.Destroy = true
+                UpdateScore()
+
+            } else if (
+                this.Immune &&
+                (
+                    (Game.Ball.Position.Y - Game.Ball.Radius >= this.Position.Y + this.Height + Settings.RectMargin / 2) ||
+                    (Game.Ball.Position.Y + Game.Ball.Radius <= this.Position.Y - Settings.RectMargin / 2) ||
+                    (Game.Ball.Position.X - Game.Ball.Radius >= this.Position.X + this.Width + Settings.RectMargin / 2) ||
+                    (Game.Ball.Position.X + Game.Ball.Radius <= this.Position.X - Settings.RectMargin / 2)
+                )
+            ){
+                this.Immune = false
             }
         }
     }

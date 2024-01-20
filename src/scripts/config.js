@@ -24,6 +24,8 @@ const Game = {
     
     Score : 0,
     isPlaying : false,
+    Computer : false,
+    Test : false,
 
     Frame : 0,
 }

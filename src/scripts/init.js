@@ -15,8 +15,6 @@ window.onload = () => {
 
     Game.Player = P1
     Game.Ball = B1
-
-    Game.Player.Computer = true
     
     SetScreen()
     GameLoop()
@@ -32,10 +30,15 @@ function SetScreen(){
     Game.Ball.Velocity = Pair(0, 0)
     Game.Score = 0
     
+    Game.Computer = false
+    Game.Test = false
+    
     UpdateScore(0)
 
     Settings.RectRange = [Pair(0, ~~(Canvas.height/15)), Pair(Canvas.width, ~~(Canvas.height/5*2))]
     Game.Frame = 0
+    
+    Game.Computer = true
 
     SpawnRectField()
     SpawnSprites()
