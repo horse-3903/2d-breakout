@@ -8,7 +8,7 @@ This project was created as part of a learning journey into 2D game development 
 
 ## Preview
 
-![Game Preview](https://github.com/horse-3903/2d-breakout/tree/main/preview/preview_1.png?raw=true)
+![Game Preview](https://raw.githubusercontent.com/horse-3903/2d-breakout/main/preview/preview_1.png)
 
 ## Getting Started
 
@@ -55,6 +55,7 @@ Adjust game settings in `config.js` to customize aspects such as ball speed, pla
 
 ## Future Enhancements
 
+- Add proper GUI
 - Add levels with increasing difficulty.
 - Implement power-ups and special bricks.
 
