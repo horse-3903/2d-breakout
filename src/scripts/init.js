@@ -29,7 +29,7 @@ function SetScreen(){
     Game.Sprites = []
     Game.Ball.Velocity = Pair(0, 0)
     Game.Score = 0
-    
+
     Game.Computer = false
     Game.Test = false
     
@@ -38,7 +38,7 @@ function SetScreen(){
     Settings.RectRange = [Pair(0, ~~(Canvas.height/15)), Pair(Canvas.width, ~~(Canvas.height/5*2))]
     Game.Frame = 0
     
-    Game.Computer = true
+    // Game.Computer = true
 
     SpawnRectField()
     SpawnSprites()

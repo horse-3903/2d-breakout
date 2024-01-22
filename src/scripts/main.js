@@ -1,4 +1,4 @@
-const P1 = new PlayerSprite("#1FEA00", 0, 0, 150, 15)
+const P1 = new PlayerSprite("#1FEA00", 0, 0, 175, 15)
 const B1 = new BallSprite("#1FEA00", 0, 0, 7)
 
 function KeyDownHandler(e){

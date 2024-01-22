@@ -26,6 +26,7 @@ This project was created as part of a learning journey into 2D game development 
 - **Paddle Movement**: Use the left and right arrow keys to move the paddle.
 - **Ball Bouncing**: The ball bounces off the walls and paddle.
 - **Ball Velocity**: The ball starts with a random velocity, adding an element of unpredictability.
+- **Acceleration and Friction**: If the ball hits the paddle when the paddle is in motion, the ball will accelerate or decelerate based on the motion of the paddle.
 
 ### Bricks
 - **Brick Field**: The game features a wall of bricks at the top.

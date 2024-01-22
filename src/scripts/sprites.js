@@ -74,8 +74,8 @@ class BallSprite extends Sprite{
             this.Velocity = Pair(0, 3)
         else
             this.Velocity = Pair(
-                RandVal(-Settings.StartBallSpeed, Settings.StartBallSpeed, (i) => Math.abs(i) > 1.25), 
-                RandVal(1.5, Settings.StartBallSpeed),
+                RandVal(-Settings.StartBallSpeed, Settings.StartBallSpeed, (i) => Math.abs(i) > 1.5), 
+                RandVal(1.75, Settings.StartBallSpeed),
             )
     }
 
