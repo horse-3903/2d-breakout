@@ -16,7 +16,7 @@ A classic Breakout arcade game built with HTML5 Canvas and vanilla JavaScript
 
 ## Overview
 
-2D Breakout is a browser-based implementation of the classic Atari Breakout arcade game, built using HTML5 Canvas and vanilla JavaScript. Control a paddle to bounce a ball and destroy all the bricks. The game features physics-based ball dynamics, immune bricks, a computer-controlled paddle mode, and configurable settings — making it both a playable game and a practical study in 2D game development.
+2D Breakout is a browser-based implementation of the classic Atari Breakout arcade game, built using HTML5 Canvas and vanilla JavaScript. Control a paddle to bounce a ball and destroy all the bricks. The game features physics-based ball dynamics, immune bricks, a computer-controlled paddle mode, and configurable settings, making it both a playable game and a practical study in 2D game development.
 
 ## Preview
 
@@ -24,13 +24,13 @@ A classic Breakout arcade game built with HTML5 Canvas and vanilla JavaScript
 
 ## Features
 
-- **Physics-based ball movement** — ball launches with a randomised initial velocity for unpredictability
-- **Paddle momentum** — ball speed increases or decreases based on paddle movement direction at impact
-- **Immune bricks** — some bricks flash red when first hit and become destructible only after a cooldown period
-- **Scoring system** — score increments with each brick destroyed, displayed live on screen
-- **Computer mode** — the paddle automatically tracks the ball, useful for watching the game play itself
-- **Win / lose conditions** — win by clearing all bricks; lose if the ball falls below the paddle
-- **Configurable settings** — adjust ball speed, paddle speed, brick dimensions, and more via `config.js`
+- **Physics-based ball movement**: ball launches with a randomised initial velocity for unpredictability
+- **Paddle momentum**: ball speed increases or decreases based on paddle movement direction at impact
+- **Immune bricks**: some bricks flash red when first hit and become destructible only after a cooldown period
+- **Scoring system**: score increments with each brick destroyed, displayed live on screen
+- **Computer mode**: the paddle automatically tracks the ball, useful for watching the game play itself
+- **Win / lose conditions**: win by clearing all bricks; lose if the ball falls below the paddle
+- **Configurable settings**: adjust ball speed, paddle speed, brick dimensions, and more via `config.js`
 
 ## Tech Stack
 
